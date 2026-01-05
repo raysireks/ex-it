@@ -1,35 +1,89 @@
-# ex-it
+# Ex→It
 
-A simple project with GitHub Pages deployment via GitHub Actions.
+**Break Free, Move Forward**
 
-## GitHub Pages Deployment
+A supportive web application to help people maintain no-contact with their ex-partners and focus on healing and personal growth.
 
-This repository includes two GitHub Actions workflows for deploying to GitHub Pages:
+## Features
 
-### 1. Automatic Deployment (deploy-pages.yml)
-- **Triggers**: Automatically deploys to GitHub Pages when code is pushed to the `master` or `main` branch
-- **Purpose**: Ensures the production site is always up-to-date with the latest changes in the main branch
-- **Usage**: Simply merge your PR to master, and the site will be automatically deployed
+- **2-Second Splash Screen**: Welcome users with the branding and tagline
+- **Days of No Contact Counter**: Track your progress with a prominent, centered counter
+- **Community Wisdom**: View and vote on the top 10 community-submitted blurbs of encouragement
+- **Submit Your Own Blurbs**: Share your wisdom with the community (requires login)
+- **Warning System**: Thoughtful intervention when users feel the urge to message their ex
+- **Support Resources**: 6 categories of support including Community, Professional Help, Stalling Methods, AI Chat, Reasons for Leaving, and Looking Forward
+- **Recovery Resources**: Educational modules to guide the healing journey
+- **Authentication**: Simple login system with localStorage persistence
 
-### 2. Manual PR Deployment (deploy-pr-to-pages.yml)
-- **Triggers**: Manual deployment via workflow_dispatch
-- **Purpose**: Allows testing a PR branch on GitHub Pages before merging
-- **Usage**: 
-  1. Navigate to the "Actions" tab in the repository
-  2. Select "Deploy PR to GitHub Pages" workflow
-  3. Click "Run workflow"
-  4. Select the branch you want to deploy
-  5. Click "Run workflow" to deploy that branch to Pages
+## Tech Stack
 
-## Setup Requirements
+- **React 19** with TypeScript
+- **Vite 7** for fast builds and development
+- **CSS3** with modern animations and gradients
+- All backend services are stubbed for demonstration
 
-To use these workflows, ensure GitHub Pages is enabled in your repository settings:
-1. Go to repository Settings > Pages
-2. Under "Source", select "GitHub Actions"
-3. The workflows will now be able to deploy to Pages
+## Getting Started
 
-**Note**: The workflows upload the entire repository to Pages. GitHub Pages automatically excludes files starting with `.` (including `.github/`) from being served, so sensitive configuration files are not exposed.
+### Prerequisites
 
-## Viewing Your Site
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-After deployment, your site will be available at: `https://<username>.github.io/<repository-name>/`
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Type checking
+npm run lint
+```
+
+### Development
+
+The application will be available at `http://localhost:5173/` when running the dev server.
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable React components
+├── pages/           # Page components
+├── services/        # Stub service implementations
+├── hooks/           # Custom React hooks
+├── types/           # TypeScript type definitions
+├── App.tsx          # Main application component
+├── App.css          # Global styles
+└── main.tsx         # Application entry point
+```
+
+## Services (Stubbed)
+
+All services are currently stubbed with in-memory implementations:
+
+- **authService**: Handles login/logout with localStorage persistence
+- **blurbService**: Manages community wisdom posts and voting
+- **resourceService**: Provides recovery resource modules
+
+## Future Enhancements
+
+- Real backend API integration
+- User registration and profile management
+- AI chat companion
+- Mobile app versions
+- Community forums
+- Professional help directory
+- Progress tracking and analytics
+
+## License
+
+See [LICENSE](LICENSE) file for details.
