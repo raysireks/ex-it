@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { RecaptchaVerifier, ConfirmationResult } from 'firebase/auth';
+import { RecaptchaVerifier, ConfirmationResult, AuthCredential, linkWithCredential } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
-type AuthMethod = 'options' | 'email-login' | 'email-signup' | 'phone';
+type AuthMethod = 'options' | 'email-login' | 'email-signup' | 'phone' | 'conflict';
 
 const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
-  const { login, loginWithApple, loginWithEmail, signupWithEmail, loginWithPhone } = useAuth();
+  const { login, loginWithApple, loginWithEmail, signupWithEmail, loginWithPhone, resolveAccountConflict } = useAuth();
   const [error, setError] = useState('');
   const [method, setMethod] = useState<AuthMethod>('options');
+
+  // Conflict state
+  const [pendingCred, setPendingCred] = useState<AuthCredential | null>(null);
+  const [conflictEmail, setConflictEmail] = useState('');
 
   // Email state
   const [email, setEmail] = useState('');
@@ -23,14 +27,52 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   const [verificationCode, setVerificationCode] = useState('');
   const [verificationId, setVerificationId] = useState<ConfirmationResult | null>(null);
 
+  const handleConflict = async (err: any) => {
+    if (err.code === 'auth/account-exists-with-different-credential') {
+      try {
+        const resolution = await resolveAccountConflict(err).catch(e => e);
+        if (resolution.pendingCred) {
+          setPendingCred(resolution.pendingCred);
+          setConflictEmail(resolution.customData?.email || '');
+          setMethod('conflict');
+          setError(`An account already exists with ${resolution.customData?.email}. Please sign in with your existing account to link them.`);
+          return true;
+        }
+      } catch (resolvingErr) {
+        console.error("Error resolving conflict details", resolvingErr);
+      }
+    }
+    return false;
+  };
+
+  const handleLinkComplete = async () => {
+    if (auth.currentUser && pendingCred) {
+      try {
+        await linkWithCredential(auth.currentUser, pendingCred);
+        onClose();
+      } catch (linkErr) {
+        console.error("Linking failed", linkErr);
+        setError("Failed to link accounts.");
+      }
+    }
+  };
+
   const handleGoogleLogin = async () => {
     try {
       setError('');
-      await login();
-      onClose();
-    } catch (err) {
-      setError('Failed to sign in via Google.');
-      console.error(err);
+      if (method === 'conflict') {
+        await login(); // Sign in with existing Google account
+        await handleLinkComplete();
+      } else {
+        await login();
+        onClose();
+      }
+    } catch (err: any) {
+      const handled = await handleConflict(err);
+      if (!handled) {
+        setError('Failed to sign in via Google.');
+        console.error(err);
+      }
     }
   };
 
@@ -39,9 +81,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
       setError('');
       await loginWithApple();
       onClose();
-    } catch (err) {
-      setError('Failed to sign in via Apple.');
-      console.error(err);
+    } catch (err: any) {
+      const handled = await handleConflict(err);
+      if (!handled) {
+        setError('Failed to sign in via Apple.');
+        console.error(err);
+      }
     }
   };
 
@@ -50,7 +95,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
     try {
       setError('');
       await loginWithEmail(email, password);
-      onClose();
+      if (method === 'conflict') {
+        await handleLinkComplete();
+      } else {
+        onClose();
+      }
     } catch (err) {
       setError('Invalid email or password.');
       console.error(err);
@@ -150,15 +199,22 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             {method === 'email-login' && 'Email Login'}
             {method === 'email-signup' && 'Create Account'}
             {method === 'phone' && 'Phone Login'}
+            {method === 'conflict' && 'Link Account'}
           </h2>
 
           {method === 'options' && (
             <p className="login-subtitle">Sign in to sync your progress across devices.</p>
           )}
 
+          {method === 'conflict' && (
+            <p className="login-subtitle">
+              Please sign in with your <strong>existing account</strong> to link {conflictEmail}.
+            </p>
+          )}
+
           {error && <div className="error-message">{error}</div>}
 
-          {method === 'options' && renderOptions()}
+          {(method === 'options' || method === 'conflict') && renderOptions()}
 
           {(method === 'email-login' || method === 'email-signup') && (
             <form className="auth-form" onSubmit={method === 'email-login' ? handleEmailLogin : handleEmailSignup}>
