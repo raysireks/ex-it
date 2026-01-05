@@ -34,14 +34,14 @@ const Logo: React.FC<LogoProps> = ({ size = 'medium', className = '' }) => {
       <defs>
         {/* Gradient for icon background */}
         <linearGradient id={iconGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#667eea', stopOpacity: 1 }} />
-          <stop offset="100%" style={{ stopColor: '#764ba2', stopOpacity: 1 }} />
+          <stop offset="0%" style={{ stopColor: '#a18cd1', stopOpacity: 1 }} />
+          <stop offset="100%" style={{ stopColor: '#fbc2eb', stopOpacity: 1 }} />
         </linearGradient>
         
         {/* Gradient for text */}
         <linearGradient id={textGradientId} x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
-          <stop offset="100%" style={{ stopColor: '#f0f0f0', stopOpacity: 0.95 }} />
+          <stop offset="100%" style={{ stopColor: '#f0f0f0', stopOpacity: 0.8 }} />
         </linearGradient>
 
         {/* Arrow path for reuse */}
@@ -79,9 +79,9 @@ const Logo: React.FC<LogoProps> = ({ size = 'medium', className = '' }) => {
       <text
         x={iconSize + 15}
         y={height / 2 + fontSizeNum / 3}
-        fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif"
+        fontFamily="'Outfit', sans-serif"
         fontSize={fontSize}
-        fontWeight="900"
+        fontWeight="800"
         fill={`url(#${textGradientId})`}
         letterSpacing="1px"
       >
