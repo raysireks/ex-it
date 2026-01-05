@@ -10,7 +10,9 @@ import {
     signInWithPhoneNumber,
     OAuthProvider,
     ApplicationVerifier,
-    ConfirmationResult
+    ConfirmationResult,
+    linkWithPopup,
+    fetchSignInMethodsForEmail
 } from "firebase/auth";
 import { auth } from "../lib/firebase";
 
@@ -23,6 +25,8 @@ interface AuthContextType {
     signUpWithEmail: (email: string, pass: string) => Promise<void>;
     signInWithPhone: (phoneNumber: string, appVerifier: ApplicationVerifier) => Promise<ConfirmationResult>;
     logout: () => Promise<void>;
+    linkWithGoogle: () => Promise<void>;
+    resolveAccountConflict: (error: any) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -34,6 +38,8 @@ export const AuthContext = createContext<AuthContextType>({
     signUpWithEmail: async () => { },
     signInWithPhone: async () => { throw new Error("Not implemented"); },
     logout: async () => { },
+    linkWithGoogle: async () => { },
+    resolveAccountConflict: async () => { },
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -53,7 +59,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
-        } catch (error) {
+        } catch (error: any) {
+            if (error.code === 'auth/account-exists-with-different-credential') {
+                throw error; // Let component handle re-auth flow
+            }
             console.error("Error signing in with Google", error);
             throw error;
         }
@@ -96,6 +105,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const linkWithGoogle = async () => {
+        if (!auth.currentUser) return;
+        const provider = new GoogleAuthProvider();
+        try {
+            await linkWithPopup(auth.currentUser, provider);
+        } catch (error) {
+            console.error("Error linking with Google", error);
+            throw error;
+        }
+    };
+
+    const resolveAccountConflict = async (error: any) => {
+        // This is a helper to handle the specific merging logic if we want to centralize it.
+        // For now, we will expose the primitives and let the UI drive the flow.
+        const pendingCred = OAuthProvider.credentialFromError(error);
+        const email = error.customData?.email;
+        if (!email || !pendingCred) throw new Error("Invalid conflict error");
+
+        const methods = await fetchSignInMethodsForEmail(auth, email);
+        // Return info needed for UI to prompt user
+        throw { ...error, methods, pendingCred };
+    };
+
     const logout = async () => {
         try {
             await signOut(auth);
@@ -114,7 +146,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             signInWithEmail,
             signUpWithEmail,
             signInWithPhone,
-            logout
+            logout,
+            linkWithGoogle,
+            resolveAccountConflict
         }}>
             {!loading && children}
         </AuthContext.Provider>
