@@ -14,9 +14,14 @@ const LandingPage: React.FC = () => {
   useEffect(() => {
     // Load the blurb of the day (top voted blurb)
     const loadBlurbOfTheDay = async () => {
-      const blurbs = await blurbService.getTopBlurbs(1);
-      if (blurbs.length > 0) {
-        setBlurbOfTheDay(blurbs[0]);
+      try {
+        const blurbs = await blurbService.getTopBlurbs(1);
+        if (blurbs.length > 0) {
+          setBlurbOfTheDay(blurbs[0]);
+        }
+      } catch (error) {
+        console.error('Failed to load blurb of the day:', error);
+        // Silently fail - the UI will just not show the blurb
       }
     };
     loadBlurbOfTheDay();
