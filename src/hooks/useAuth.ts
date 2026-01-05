@@ -15,6 +15,8 @@ export const useAuth = () => {
     signupWithEmail: context.signUpWithEmail,
     loginWithPhone: context.signInWithPhone,
     logout: context.logout,
+    linkWithGoogle: context.linkWithGoogle,
+    resolveAccountConflict: context.resolveAccountConflict,
     isAuthenticated: !!context.user
   };
 };
