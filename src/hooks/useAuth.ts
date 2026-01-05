@@ -1,26 +1,20 @@
-import { useState, useEffect } from 'react';
-import { User } from '../types';
-import { authService } from '../services/authService';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const currentUser = authService.getCurrentUser();
-    setUser(currentUser);
-    setLoading(false);
-  }, []);
-
-  const login = async (username: string, password: string) => {
-    const user = await authService.login(username, password);
-    setUser(user);
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return {
+    user: context.user,
+    loading: context.loading,
+    login: context.signInWithGoogle,
+    loginWithApple: context.signInWithApple,
+    loginWithEmail: context.signInWithEmail,
+    signupWithEmail: context.signUpWithEmail,
+    loginWithPhone: context.signInWithPhone,
+    logout: context.logout,
+    isAuthenticated: !!context.user
   };
-
-  const logout = async () => {
-    await authService.logout();
-    setUser(null);
-  };
-
-  return { user, loading, login, logout, isAuthenticated: !!user };
 };

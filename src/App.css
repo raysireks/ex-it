@@ -646,6 +646,70 @@ body {
   transform: translateY(-2px);
 }
 
+.login-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.login-subtitle {
+  color: var(--col-text-muted);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.error-message {
+  color: #ff4b4b;
+  background: rgba(255, 75, 75, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  width: 100%;
+  border: 1px solid rgba(255, 75, 75, 0.2);
+}
+
+.google-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  background: white;
+  color: #3c4043;
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-main);
+  position: relative;
+  overflow: hidden;
+}
+
+.google-login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 12px 24px rgba(0, 0, 0, 0.2);
+  background: #f8f9fa;
+}
+
+.google-login-button:active {
+  transform: translateY(0);
+  background: #eff2f5;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
 .login-required {
   text-align: center;
   padding: 2rem;
@@ -702,6 +766,121 @@ body {
 .blurb-modal .blurb-list::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
+}
+
+/* --- New Auth Styles --- */
+
+.apple-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.apple-login-button:hover {
+  transform: translateY(-2px);
+  background: #1a1a1a;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.apple-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-divider span {
+  padding: 0 1rem;
+  color: var(--col-text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.method-button {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-main);
+}
+
+.method-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.auth-form {
+  width: 100%;
+  text-align: left;
+}
+
+.auth-switch {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.auth-switch p {
+  color: var(--col-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.auth-switch a {
+  color: var(--col-primary);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+.back-link {
+  display: block;
+  margin-top: 1rem;
+  color: var(--col-text-muted) !important;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: white !important;
 }
 
 .blurb-modal .blurb-list::-webkit-scrollbar-thumb {

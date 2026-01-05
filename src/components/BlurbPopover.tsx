@@ -49,7 +49,7 @@ const BlurbPopover: React.FC<BlurbPopoverProps> = ({ onClose }) => {
       return;
     }
 
-    await blurbService.submitBlurb(newBlurb, user.id, user.username);
+    await blurbService.submitBlurb(newBlurb, user.uid, user.displayName || 'Anonymous');
     alert('Blurb submitted successfully!');
     setNewBlurb('');
     loadBlurbs();
