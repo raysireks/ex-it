@@ -22,7 +22,7 @@ function App() {
     } else {
       document.body.style.overflow = '';
     }
-    
+
     // Cleanup on unmount
     return () => {
       document.body.style.overflow = '';
@@ -52,7 +52,7 @@ function App() {
         <div className="logo-wrapper" onClick={() => setCurrentPage('landing')}>
           <Logo size="medium" className="logo-svg" />
         </div>
-        <button 
+        <button
           className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
@@ -83,7 +83,7 @@ function App() {
           {user ? (
             <>
               <button className="nav-button">
-                👤 {user.username}
+                👤 {user.displayName || user.email}
               </button>
               <button className="nav-button" onClick={() => {
                 logout();
@@ -102,9 +102,9 @@ function App() {
           )}
         </nav>
       </div>
-      
+
       {renderPage()}
-      
+
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </div>
   );

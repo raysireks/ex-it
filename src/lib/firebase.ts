@@ -19,5 +19,7 @@ export const analytics = getAnalytics(app);
 // Only connect to emulator if explicitly enabled via environment variable
 if (import.meta.env.VITE_USE_AUTH_EMULATOR === 'true') {
     connectAuthEmulator(auth, "http://localhost:9099");
+    // Disable phone auth verification for testing
+    auth.settings.appVerificationDisabledForTesting = true;
     console.log('Firebase Auth Emulator Connected');
 }
