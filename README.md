@@ -13,14 +13,14 @@ A supportive web application to help people maintain no-contact with their ex-pa
 - **Warning System**: Thoughtful intervention when users feel the urge to message their ex
 - **Support Resources**: 6 categories of support including Community, Professional Help, Stalling Methods, AI Chat, Reasons for Leaving, and Looking Forward
 - **Recovery Resources**: Educational modules to guide the healing journey
-- **Authentication**: Simple login system with localStorage persistence
+- **Authentication**: Secure Google Sign-In via Firebase Auth
 
 ## Tech Stack
 
 - **React 19** with TypeScript
 - **Vite 7** for fast builds and development
+- **Firebase** (Auth, Hosting, Functions)
 - **CSS3** with modern animations and gradients
-- All backend services are stubbed for demonstration
 
 ## Getting Started
 
@@ -35,7 +35,10 @@ A supportive web application to help people maintain no-contact with their ex-pa
 # Install dependencies
 npm install
 
-# Run development server
+# Run development server with Firebase Emulators (Recommended for local dev)
+npm run dev:emulator
+
+# Run development server with Live Firebase
 npm run dev
 
 # Build for production
@@ -44,8 +47,11 @@ npm run build
 # Preview production build
 npm run preview
 
-# Type checking
-npm run lint
+# Deploy to Firebase (Hosting & Functions)
+npm run deploy
+
+# Start Firebase Emulators separately
+npm run emulators
 ```
 
 ### Development
@@ -70,7 +76,6 @@ src/
 
 All services are currently stubbed with in-memory implementations:
 
-- **authService**: Handles login/logout with localStorage persistence
 - **blurbService**: Manages community wisdom posts and voting
 - **resourceService**: Provides recovery resource modules
 
