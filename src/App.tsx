@@ -20,13 +20,13 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <LandingPage onNavigate={setCurrentPage} />;
+        return <LandingPage />;
       case 'support':
         return <SupportPage onNavigate={setCurrentPage} />;
       case 'resources':
-        return <ResourcesPage onNavigate={setCurrentPage} />;
+        return <ResourcesPage />;
       default:
-        return <LandingPage onNavigate={setCurrentPage} />;
+        return <LandingPage />;
     }
   };
 
