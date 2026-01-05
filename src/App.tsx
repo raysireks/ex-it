@@ -11,6 +11,7 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [currentPage, setCurrentPage] = useState('landing');
   const [showLogin, setShowLogin] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
   if (showSplash) {
@@ -36,14 +37,32 @@ function App() {
         <div className="logo" onClick={() => setCurrentPage('landing')}>
           Ex→It
         </div>
-        <nav className="nav">
-          <button className="nav-button" onClick={() => setCurrentPage('landing')}>
+        <button 
+          className="hamburger" 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav className={`nav ${mobileMenuOpen ? 'nav-open' : ''}`}>
+          <button className="nav-button" onClick={() => {
+            setCurrentPage('landing');
+            setMobileMenuOpen(false);
+          }}>
             Home
           </button>
-          <button className="nav-button" onClick={() => setCurrentPage('support')}>
+          <button className="nav-button" onClick={() => {
+            setCurrentPage('support');
+            setMobileMenuOpen(false);
+          }}>
             Support
           </button>
-          <button className="nav-button" onClick={() => setCurrentPage('resources')}>
+          <button className="nav-button" onClick={() => {
+            setCurrentPage('resources');
+            setMobileMenuOpen(false);
+          }}>
             Resources
           </button>
           {user ? (
@@ -51,12 +70,18 @@ function App() {
               <button className="nav-button">
                 👤 {user.username}
               </button>
-              <button className="nav-button" onClick={logout}>
+              <button className="nav-button" onClick={() => {
+                logout();
+                setMobileMenuOpen(false);
+              }}>
                 Logout
               </button>
             </>
           ) : (
-            <button className="nav-button" onClick={() => setShowLogin(true)}>
+            <button className="nav-button" onClick={() => {
+              setShowLogin(true);
+              setMobileMenuOpen(false);
+            }}>
               Login
             </button>
           )}
