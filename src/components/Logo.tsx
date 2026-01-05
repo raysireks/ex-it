@@ -13,12 +13,12 @@ const Logo: React.FC<LogoProps> = ({ size = 'medium', className = '' }) => {
   const arrowPathId = `arrowPath-${uniqueId}`;
 
   const sizes = {
-    small: { width: 180, height: 50, fontSize: '28px', iconSize: 40 },
-    medium: { width: 240, height: 60, fontSize: '36px', iconSize: 50 },
-    large: { width: 320, height: 80, fontSize: '52px', iconSize: 70 },
+    small: { width: 180, height: 50, fontSize: '28px', fontSizeNum: 28, iconSize: 40 },
+    medium: { width: 240, height: 60, fontSize: '36px', fontSizeNum: 36, iconSize: 50 },
+    large: { width: 320, height: 80, fontSize: '52px', fontSizeNum: 52, iconSize: 70 },
   };
 
-  const { width, height, fontSize, iconSize } = sizes[size];
+  const { width, height, fontSize, fontSizeNum, iconSize } = sizes[size];
 
   return (
     <svg
@@ -78,12 +78,12 @@ const Logo: React.FC<LogoProps> = ({ size = 'medium', className = '' }) => {
       {/* Text: Ex→It */}
       <text
         x={iconSize + 15}
-        y={height / 2 + parseInt(fontSize) / 3}
+        y={height / 2 + fontSizeNum / 3}
         fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif"
         fontSize={fontSize}
         fontWeight="900"
         fill={`url(#${textGradientId})`}
-        letterSpacing="1"
+        letterSpacing="1px"
       >
         Ex→It
       </text>
