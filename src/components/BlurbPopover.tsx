@@ -27,7 +27,7 @@ const BlurbPopover: React.FC<BlurbPopoverProps> = ({ onClose }) => {
       alert('Please login to vote');
       return;
     }
-    
+
     if (votedBlurbs.has(blurbId)) {
       return;
     }
@@ -50,16 +50,17 @@ const BlurbPopover: React.FC<BlurbPopoverProps> = ({ onClose }) => {
     }
 
     await blurbService.submitBlurb(newBlurb, user.id, user.username);
+    alert('Blurb submitted successfully!');
     setNewBlurb('');
     loadBlurbs();
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal blurb-modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>×</button>
         <h2>Community Wisdom</h2>
-        
+
         <div className="blurb-list">
           {blurbs.map((blurb) => (
             <div key={blurb.id} className="blurb-item">

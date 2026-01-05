@@ -354,11 +354,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
   padding: 1rem;
 }
 
 .modal {
+  position: relative;
   background: var(--col-bg-surface);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
@@ -653,4 +654,57 @@ body {
   border-radius: var(--radius-sm);
   color: #ffc107;
   margin-bottom: 2rem;
+}
+
+/* Modal Close Button */
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--col-text-muted);
+  z-index: 10;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+
+/* Modal specific customization */
+.blurb-modal {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  /* Prevent modal from exceeding viewport */
+}
+
+.blurb-modal .blurb-list {
+  flex: 1;
+  overflow-y: auto;
+  /* Allow scrolling for long lists */
+  min-height: 0;
+  margin-bottom: 1rem;
+  padding-right: 0.5rem;
+  /* Space for scrollbar */
+}
+
+/* Custom scrollbar for webkit */
+.blurb-modal .blurb-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.blurb-modal .blurb-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.blurb-modal .blurb-list::-webkit-scrollbar-thumb {
+  background: var(--col-secondary);
+  border-radius: 3px;
 }
