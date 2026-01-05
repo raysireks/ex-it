@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import SupportPage from './pages/SupportPage';
 import ResourcesPage from './pages/ResourcesPage';
 import LoginModal from './components/LoginModal';
+import Logo from './components/Logo';
 import { useAuth } from './hooks/useAuth';
 
 function App() {
@@ -48,9 +49,8 @@ function App() {
   return (
     <div className="app">
       <div className="header">
-        <div className="logo" onClick={() => setCurrentPage('landing')}>
-          <span className="logo-icon">💔→💚</span>
-          <span className="logo-text">Ex→It</span>
+        <div className="logo-wrapper" onClick={() => setCurrentPage('landing')}>
+          <Logo size="medium" className="logo-svg" />
         </div>
         <button 
           className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}

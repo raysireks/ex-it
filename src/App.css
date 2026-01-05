@@ -34,23 +34,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  animation: fadeInScale 1s ease-out;
 }
 
-.splash-screen .logo-icon-large {
-  font-size: 5rem;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-  animation: bounceIn 1s ease-out;
-}
-
-@keyframes bounceIn {
+@keyframes fadeInScale {
   0% {
-    transform: scale(0);
+    transform: scale(0.8);
     opacity: 0;
-  }
-  50% {
-    transform: scale(1.2);
   }
   100% {
     transform: scale(1);
@@ -58,31 +50,25 @@ body {
   }
 }
 
-.splash-screen h1 {
-  font-size: 4rem;
-  font-weight: 900;
-  margin-bottom: 1rem;
-  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  letter-spacing: 2px;
-  animation: slideInDown 0.8s ease-out 0.3s both;
+.splash-logo {
+  animation: float 3s ease-in-out infinite;
 }
 
-@keyframes slideInDown {
-  0% {
-    transform: translateY(-50px);
-    opacity: 0;
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
   }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
+  50% {
+    transform: translateY(-10px);
   }
 }
 
 .splash-screen p {
   font-size: 1.5rem;
   opacity: 0.9;
-  animation: fadeIn 1s ease-out 0.6s both;
+  animation: fadeIn 1s ease-out 0.4s both;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
 }
 
 @keyframes fadeIn {
@@ -113,52 +99,26 @@ body {
   position: relative;
 }
 
-.logo {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: white;
+.logo-wrapper {
   cursor: pointer;
   z-index: 1001;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
   padding: 0.5rem;
   border-radius: 12px;
-  letter-spacing: 0.5px;
 }
 
-.logo:hover {
+.logo-wrapper:hover {
   transform: scale(1.05);
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.logo-icon {
-  font-size: 2rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-  animation: heartbeat 3s ease-in-out infinite;
+.logo-wrapper:active {
+  transform: scale(0.98);
 }
 
-@keyframes heartbeat {
-  0%, 100% {
-    transform: scale(1);
-  }
-  10% {
-    transform: scale(1.1);
-  }
-  20% {
-    transform: scale(1);
-  }
-}
-
-.logo-text {
-  font-weight: 900;
-  color: white;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.logo-svg {
+  display: block;
 }
 
 /* Hamburger menu button - visible on mobile */
@@ -237,13 +197,8 @@ body {
 
 /* Desktop: Hide hamburger and show horizontal menu */
 @media (min-width: 768px) {
-  .logo {
-    font-size: 2.5rem;
+  .logo-wrapper {
     padding: 0.75rem 1rem;
-  }
-
-  .logo-icon {
-    font-size: 2.75rem;
   }
 
   .hamburger {
@@ -842,14 +797,6 @@ body {
 
 /* Mobile-specific optimizations */
 @media (max-width: 767px) {
-  .splash-screen h1 {
-    font-size: 3rem;
-  }
-  
-  .splash-screen .logo-icon-large {
-    font-size: 4rem;
-  }
-  
   .splash-screen p {
     font-size: 1.25rem;
     padding: 0 1rem;
@@ -859,20 +806,14 @@ body {
 
 /* Accessibility: Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .logo-icon {
+  .splash-logo {
     animation: none;
   }
   
-  .splash-screen .logo-icon-large {
+  .splash-screen .logo-container {
     animation: none;
     opacity: 1;
     transform: scale(1);
-  }
-  
-  .splash-screen h1 {
-    animation: none;
-    opacity: 1;
-    transform: translateY(0);
   }
   
   .splash-screen p {
@@ -880,7 +821,7 @@ body {
     opacity: 0.9;
   }
   
-  .logo:hover {
+  .logo-wrapper:hover {
     transform: none;
   }
 }
