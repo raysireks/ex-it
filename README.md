@@ -28,6 +28,8 @@ To use these workflows, ensure GitHub Pages is enabled in your repository settin
 2. Under "Source", select "GitHub Actions"
 3. The workflows will now be able to deploy to Pages
 
+**Note**: The workflows upload the entire repository to Pages. GitHub Pages automatically excludes files starting with `.` (including `.github/`) from being served, so sensitive configuration files are not exposed.
+
 ## Viewing Your Site
 
 After deployment, your site will be available at: `https://<username>.github.io/<repository-name>/`
