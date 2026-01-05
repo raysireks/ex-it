@@ -50,7 +50,7 @@ const LandingPage: React.FC = () => {
             <div className="blurb-attribution">— {blurbOfTheDay.username}</div>
           </div>
         )}
-        <button className="message-button" onClick={handleMessageClick}>
+        <button className="btn-primary" onClick={handleMessageClick}>
           I Want to Message My Ex
         </button>
       </div>
