@@ -115,16 +115,16 @@ body {
 }
 
 /* Hamburger animation when menu is open */
-.header:has(.nav-open) .hamburger span:first-child {
+.hamburger.open span:first-child {
   transform: rotate(45deg);
 }
 
-.header:has(.nav-open) .hamburger span:nth-child(2) {
+.hamburger.open span:nth-child(2) {
   opacity: 0;
   transform: translateX(20px);
 }
 
-.header:has(.nav-open) .hamburger span:nth-child(3) {
+.hamburger.open span:nth-child(3) {
   transform: rotate(-45deg);
 }
 
