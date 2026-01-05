@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { resourceService } from '../services/resourceService';
 import { ResourceModule } from '../types';
 
-interface ResourcesPageProps {
-  onNavigate: (page: string) => void;
-}
-
-const ResourcesPage: React.FC<ResourcesPageProps> = () => {
+const ResourcesPage: React.FC = () => {
   const [modules, setModules] = useState<ResourceModule[]>([]);
 
   useEffect(() => {

@@ -3,11 +3,7 @@ import { useNoContactCounter } from '../hooks/useNoContactCounter';
 import BlurbPopover from '../components/BlurbPopover';
 import WarningModal from '../components/WarningModal';
 
-interface LandingPageProps {
-  onNavigate: (page: string) => void;
-}
-
-const LandingPage: React.FC<LandingPageProps> = () => {
+const LandingPage: React.FC = () => {
   const { days } = useNoContactCounter();
   const [showBlurbs, setShowBlurbs] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
