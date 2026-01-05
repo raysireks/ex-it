@@ -30,15 +30,59 @@ body {
   animation: fadeIn 0.5s ease-in;
 }
 
+.splash-screen .logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.splash-screen .logo-icon-large {
+  font-size: 5rem;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  animation: bounceIn 1s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .splash-screen h1 {
   font-size: 4rem;
-  font-weight: bold;
+  font-weight: 900;
   margin-bottom: 1rem;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+  animation: slideInDown 0.8s ease-out 0.3s both;
+}
+
+@keyframes slideInDown {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .splash-screen p {
   font-size: 1.5rem;
   opacity: 0.9;
+  animation: fadeIn 1s ease-out 0.6s both;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes fadeIn {
@@ -70,11 +114,47 @@ body {
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.75rem;
+  font-weight: 800;
   color: white;
   cursor: pointer;
   z-index: 1001;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.logo-icon {
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.logo-text {
+  font-weight: 900;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Hamburger menu button - visible on mobile */
@@ -154,7 +234,12 @@ body {
 /* Desktop: Hide hamburger and show horizontal menu */
 @media (min-width: 768px) {
   .logo {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .logo-icon {
+    font-size: 2.75rem;
   }
 
   .hamburger {
@@ -749,4 +834,21 @@ body {
 
 .proceed-button:hover {
   background: #c0392b;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 767px) {
+  .splash-screen h1 {
+    font-size: 3rem;
+  }
+  
+  .splash-screen .logo-icon-large {
+    font-size: 4rem;
+  }
+  
+  .splash-screen p {
+    font-size: 1.25rem;
+    padding: 0 1rem;
+    text-align: center;
+  }
 }

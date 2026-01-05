@@ -15,7 +15,10 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
   return (
     <div className="splash-screen">
-      <h1>Ex→It</h1>
+      <div className="logo-container">
+        <div className="logo-icon-large">💔→💚</div>
+        <h1>Ex→It</h1>
+      </div>
       <p>Break Free, Move Forward</p>
     </div>
   );
