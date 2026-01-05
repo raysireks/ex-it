@@ -49,7 +49,8 @@ function App() {
     <div className="app">
       <div className="header">
         <div className="logo" onClick={() => setCurrentPage('landing')}>
-          Ex→It
+          <span className="logo-icon">💔→💚</span>
+          <span className="logo-text">Ex→It</span>
         </div>
         <button 
           className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}
