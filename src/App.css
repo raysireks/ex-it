@@ -30,15 +30,45 @@ body {
   animation: fadeIn 0.5s ease-in;
 }
 
-.splash-screen h1 {
-  font-size: 4rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+.splash-screen .logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  animation: fadeInScale 1s ease-out;
+}
+
+@keyframes fadeInScale {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.splash-logo {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .splash-screen p {
   font-size: 1.5rem;
   opacity: 0.9;
+  animation: fadeIn 1s ease-out 0.4s both;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
 }
 
 @keyframes fadeIn {
@@ -69,12 +99,26 @@ body {
   position: relative;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: white;
+.logo-wrapper {
   cursor: pointer;
   z-index: 1001;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+
+.logo-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.logo-wrapper:active {
+  transform: scale(0.98);
+}
+
+.logo-svg {
+  display: block;
 }
 
 /* Hamburger menu button - visible on mobile */
@@ -153,8 +197,8 @@ body {
 
 /* Desktop: Hide hamburger and show horizontal menu */
 @media (min-width: 768px) {
-  .logo {
-    font-size: 2rem;
+  .logo-wrapper {
+    padding: 0.75rem 1rem;
   }
 
   .hamburger {
@@ -749,4 +793,35 @@ body {
 
 .proceed-button:hover {
   background: #c0392b;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 767px) {
+  .splash-screen p {
+    font-size: 1.25rem;
+    padding: 0 1rem;
+    text-align: center;
+  }
+}
+
+/* Accessibility: Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .splash-logo {
+    animation: none;
+  }
+  
+  .splash-screen .logo-container {
+    animation: none;
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .splash-screen p {
+    animation: none;
+    opacity: 0.9;
+  }
+  
+  .logo-wrapper:hover {
+    transform: none;
+  }
 }
