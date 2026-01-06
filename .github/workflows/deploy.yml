@@ -18,7 +18,10 @@ jobs:
         run: npm ci && npm --prefix functions ci
         
       - name: Build
-        run: npm run build && npm --prefix functions run build
+        run: |
+          mkdir -p secrets
+          echo '${{ secrets.FIREBASE_CONFIG_JSON }}' > secrets/firebaseConfig.json
+          npm run build && npm --prefix functions run build
         
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
