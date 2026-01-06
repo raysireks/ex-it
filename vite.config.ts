@@ -5,23 +5,26 @@ import * as path from 'path';
 
 // Helper to load Firebase Config
 function loadFirebaseConfig() {
-  const secretPath = path.resolve(__dirname, 'secrets/firebaseConfig.json');
+  // Method 1: Environment Variable (CI/CD)
+  // This is the preferred method for deployment (GitHub Actions)
+  if (process.env.FIREBASE_CONFIG_JSON) {
+    try {
+      return JSON.parse(process.env.FIREBASE_CONFIG_JSON);
+    } catch (e) {
+      console.error("Failed to parse FIREBASE_CONFIG_JSON env var:", e);
+    }
+  }
+
+  // Method 2: Local File (Development)
+  // Use process.cwd() for compatibility
+  const secretPath = path.resolve(process.cwd(), 'secrets/firebaseConfig.json');
   try {
     if (fs.existsSync(secretPath)) {
       const data = fs.readFileSync(secretPath, 'utf-8');
       return JSON.parse(data);
     }
   } catch (e) {
-    console.warn("Could not read local secrets file.");
-  }
-
-  // Fallback to Env Var (for CI/CD)
-  if (process.env.FIREBASE_CONFIG_JSON) {
-    try {
-      return JSON.parse(process.env.FIREBASE_CONFIG_JSON);
-    } catch (e) {
-      console.error("Failed to parse FIREBASE_CONFIG_JSON env var.");
-    }
+    console.warn("Could not read local secrets file:", e);
   }
 
   return null;
