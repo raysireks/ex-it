@@ -4,6 +4,7 @@ import SplashScreen from './components/SplashScreen';
 import LandingPage from './pages/LandingPage';
 import SupportPage from './pages/SupportPage';
 import ResourcesPage from './pages/ResourcesPage';
+import ChatbotPage from './pages/ChatbotPage';
 import LoginModal from './components/LoginModal';
 import Logo from './components/Logo';
 import { useAuth } from './hooks/useAuth';
@@ -36,13 +37,15 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <LandingPage />;
+        return <LandingPage onNavigate={setCurrentPage} />;
       case 'support':
         return <SupportPage onNavigate={setCurrentPage} />;
       case 'resources':
         return <ResourcesPage />;
+      case 'chatbot':
+        return <ChatbotPage onBack={() => setCurrentPage('landing')} />;
       default:
-        return <LandingPage />;
+        return <LandingPage onNavigate={setCurrentPage} />;
     }
   };
 
