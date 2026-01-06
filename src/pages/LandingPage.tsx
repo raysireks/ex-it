@@ -5,11 +5,17 @@ import WarningModal from '../components/WarningModal';
 import { blurbService } from '../services/blurbService';
 import { Blurb } from '../types';
 
-const LandingPage: React.FC = () => {
+interface LandingPageProps {
+  onNavigate?: (page: string) => void;
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   const { days } = useNoContactCounter();
   const [showBlurbs, setShowBlurbs] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [blurbOfTheDay, setBlurbOfTheDay] = useState<Blurb | null>(null);
+
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     // Load the blurb of the day (top voted blurb)
@@ -33,11 +39,18 @@ const LandingPage: React.FC = () => {
 
   const handleProceed = () => {
     setShowWarning(false);
-    alert('Remember: You are strong. You deserve better. This too shall pass.');
+    setIsTransitioning(true);
+
+    // Wait for animation to finish before navigating
+    setTimeout(() => {
+      if (onNavigate) {
+        onNavigate('chatbot');
+      }
+    }, 1500);
   };
 
   return (
-    <div className="landing-page">
+    <div className={`landing-page ${isTransitioning ? 'exiting' : ''}`}>
       <div className="counter-container">
         <div className="counter-circle" onClick={() => setShowBlurbs(true)}>
           <div className="days">{days}</div>

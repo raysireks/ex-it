@@ -248,8 +248,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem;
+  justify-content: flex-start;
+  /* Fix alignment */
+  padding-top: 15vh;
+  /* Match ChatbotPage */
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   gap: 3rem;
 }
 
@@ -441,6 +446,14 @@ body {
 
 .btn-primary {
   animation-delay: 0.5s;
+}
+
+/* Transition Effect */
+.landing-page.exiting> :not(.counter-container),
+.landing-page.exiting .counter-container> :not(.counter-circle) {
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
+  pointer-events: none;
 }
 
 /* --- Secondary Pages & Components --- */
@@ -886,4 +899,213 @@ body {
 .blurb-modal .blurb-list::-webkit-scrollbar-thumb {
   background: var(--col-secondary);
   border-radius: 3px;
+}
+
+/* Counter Page */
+.landing-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* Changed from center to fixed position */
+  padding-top: 15vh;
+  /* Fixed top position */
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+  gap: 3rem;
+}
+
+.counter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Transition Effect */
+.landing-page.exiting> :not(.counter-container),
+.landing-page.exiting .counter-container> :not(.counter-circle) {
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
+  /* Slower fade */
+  pointer-events: none;
+}
+
+/* --- Chatbot Page --- */
+.chatbot-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* Match LandingPage */
+  padding-top: 15vh;
+  /* Match LandingPage */
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1500;
+}
+
+/* Glowing Blue Circle Variant */
+.counter-circle.glowing {
+  background: rgba(0, 0, 0, 0.4);
+  /* Fix: Use hsla for hue vars */
+  border-color: hsla(var(--accent-hue), 90%, 60%, 0.8);
+  box-shadow:
+    0 0 60px hsla(var(--accent-hue), 90%, 60%, 0.4),
+    inset 0 0 30px hsla(var(--accent-hue), 90%, 60%, 0.2);
+  animation: pulse-glow 3s infinite alternate;
+}
+
+@keyframes pulse-glow {
+  from {
+    box-shadow:
+      0 0 60px hsla(var(--accent-hue), 90%, 60%, 0.4),
+      inset 0 0 30px hsla(var(--accent-hue), 90%, 60%, 0.2);
+    border-color: hsla(var(--accent-hue), 90%, 60%, 0.5);
+  }
+
+  to {
+    box-shadow:
+      0 0 90px hsla(var(--accent-hue), 90%, 60%, 0.6),
+      inset 0 0 50px hsla(var(--accent-hue), 90%, 60%, 0.3);
+    border-color: hsla(var(--accent-hue), 90%, 60%, 1);
+  }
+}
+
+.chat-input-form {
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+
+  display: flex;
+  gap: 1rem;
+  width: 90%;
+  max-width: 600px;
+
+  animation: fadeIn 1s 0.5s ease-out forwards;
+  opacity: 0;
+  z-index: 100;
+}
+
+.chat-input-form input {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1.1rem;
+  backdrop-filter: blur(10px);
+}
+
+.chat-input-form input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--col-accent);
+  outline: none;
+}
+
+.chat-input-form button {
+  padding: 0 2rem;
+  border-radius: 30px;
+  background: var(--col-accent);
+  color: #000;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.chat-input-form button:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.back-button {
+  margin-top: 2rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.back-button:hover {
+  color: white;
+}
+
+/* Zoom Text Overlay */
+.zoom-text-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  z-index: 2000;
+  pointer-events: none;
+  /* Let clicks pass through if needed, though usually text blocks */
+}
+
+.zoom-text-content {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  color: white;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(to right, #fff, #b4b4b4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  max-width: 90%;
+  line-height: 1.3;
+}
+
+/* Zoom Animations */
+/* 30% -> 100% scale, 0.2 -> 1 opacity */
+.zooming-in .zoom-text-content {
+  animation: zoomInText 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 100% -> 0% scale, fade out */
+.zooming-out .zoom-text-content {
+  animation: zoomOutText 0.8s ease-in forwards;
+}
+
+@keyframes zoomInText {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOutText {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
 }
