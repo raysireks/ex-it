@@ -1,11 +1,11 @@
 name: Deploy PR to GitHub Pages
 
 on:
-  # Trigger on pull requests - adds a comment with deploy option
+  # Auto-deploy on PR commits
   pull_request:
     types: [opened, synchronize, reopened]
 
-  # Allow manual deployment from PR branches
+  # Allow manual deployment from any branch
   workflow_dispatch:
 
 permissions:
@@ -20,48 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Job to add a deploy button/comment to PRs
-  add_deploy_comment:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Add deployment instructions comment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const body = `## 🚀 GitHub Pages Preview
-
-            To deploy this PR to GitHub Pages for preview:
-
-            1. Go to the **Actions** tab
-            2. Select **"Deploy PR to GitHub Pages"** workflow
-            3. Click **"Run workflow"**
-            4. Select this branch: \`${{ github.head_ref }}\`
-            5. Click **"Run workflow"**
-
-            Once deployed, the preview will be available at your GitHub Pages URL.`;
-
-            // Check if comment already exists
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number
-            });
-
-            const existingComment = comments.find(c => c.body.includes('GitHub Pages Preview'));
-
-            if (!existingComment) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: body
-              });
-            }
-
-  # Manual deployment job
   deploy:
-    if: github.event_name == 'workflow_dispatch'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -95,3 +54,36 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Comment PR with deployment URL
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.deployment.outputs.page_url }}';
+            const body = `## 🚀 Deployed to GitHub Pages\n\nPreview: ${url}\n\n_This deployment will be overwritten by the next PR that deploys._`;
+
+            // Find and update existing comment or create new one
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+
+            const existingComment = comments.find(c => c.body.includes('Deployed to GitHub Pages'));
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
