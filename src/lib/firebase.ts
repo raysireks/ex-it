@@ -4,9 +4,7 @@ import { getAnalytics } from "firebase/analytics";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 
-import firebaseConfig from "../../secrets/firebaseConfig.json";
-
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(__FIREBASE_CONFIG__);
 export const auth = getAuth(app);
 export const analytics = getAnalytics(app);
 export const functions = getFunctions(app);
