@@ -18,6 +18,8 @@ jobs:
         run: npm ci && npm --prefix functions ci
         
       - name: Build
+        env:
+          FIREBASE_CONFIG_JSON: '${{ secrets.FIREBASE_CONFIG_JSON }}'
         run: |
           mkdir -p secrets
           echo '${{ secrets.FIREBASE_CONFIG_JSON }}' > secrets/firebaseConfig.json
