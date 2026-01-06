@@ -1,6 +1,10 @@
 name: Deploy PR to GitHub Pages
 
 on:
+  # Trigger on pull requests - adds a comment with deploy option
+  pull_request:
+    types: [opened, synchronize, reopened]
+
   # Allow manual deployment from PR branches
   workflow_dispatch:
 
@@ -8,14 +12,56 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  pull-requests: write
 
 # Allow one concurrent deployment per branch
 concurrency:
-  group: "pages-${{ github.ref }}"
+  group: "pages-${{ github.head_ref || github.ref_name }}"
   cancel-in-progress: true
 
 jobs:
+  # Job to add a deploy button/comment to PRs
+  add_deploy_comment:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add deployment instructions comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `## 🚀 GitHub Pages Preview
+
+            To deploy this PR to GitHub Pages for preview:
+
+            1. Go to the **Actions** tab
+            2. Select **"Deploy PR to GitHub Pages"** workflow
+            3. Click **"Run workflow"**
+            4. Select this branch: \`${{ github.head_ref }}\`
+            5. Click **"Run workflow"**
+
+            Once deployed, the preview will be available at your GitHub Pages URL.`;
+
+            // Check if comment already exists
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+
+            const existingComment = comments.find(c => c.body.includes('GitHub Pages Preview'));
+
+            if (!existingComment) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+  # Manual deployment job
   deploy:
+    if: github.event_name == 'workflow_dispatch'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -24,13 +70,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        env:
+          FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
+        run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
