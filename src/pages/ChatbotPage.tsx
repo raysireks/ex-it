@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNoContactCounter } from '../hooks/useNoContactCounter';
-import { chatService } from '../services/chatService';
+import { chatService, ChatMessage } from '../services/chatService';
 
 interface ChatbotPageProps {
     onBack: () => void;
@@ -12,6 +12,7 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [botMessage, setBotMessage] = useState<string | null>(null);
     const [isZoomingOut, setIsZoomingOut] = useState(false);
+    const [history, setHistory] = useState<ChatMessage[]>([]);
 
     const zoomTimeoutRef = useRef<number | null>(null);
 
@@ -34,7 +35,16 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
         setInputText('');
 
         try {
-            const response = await chatService.sendMessage(messageToSend);
+            // Get last 20 messages to ensure roleplay context limits (5 turns = 10 messages) are visible
+            const contextHistory = history.slice(-20);
+            const response = await chatService.sendMessage(messageToSend, contextHistory);
+
+            // Update history with new exchange
+            setHistory(prev => [
+                ...prev,
+                { role: 'user', content: messageToSend },
+                { role: 'model', content: response.text }
+            ]);
 
             setBotMessage(response.text);
             setIsZoomingOut(false);
