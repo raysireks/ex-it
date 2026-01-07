@@ -24,8 +24,12 @@ if (import.meta.env.DEV) {
 
 // Initialize App Check with reCAPTCHA v3 for security
 // This ensures only your app can access Firebase resources
+const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+if (!recaptchaSiteKey) {
+    throw new Error('VITE_RECAPTCHA_SITE_KEY environment variable is not defined');
+}
 export const appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
+    provider: new ReCaptchaV3Provider(recaptchaSiteKey),
     isTokenAutoRefreshEnabled: true
 });
 console.log('App Check: Initialized with reCAPTCHA v3');
