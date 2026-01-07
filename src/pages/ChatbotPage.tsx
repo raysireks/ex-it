@@ -35,8 +35,8 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
         setInputText('');
 
         try {
-            // Get last 5 messages for context
-            const contextHistory = history.slice(-5);
+            // Get last 20 messages to ensure roleplay context limits (5 turns = 10 messages) are visible
+            const contextHistory = history.slice(-20);
             const response = await chatService.sendMessage(messageToSend, contextHistory);
 
             // Update history with new exchange
