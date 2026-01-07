@@ -34,7 +34,8 @@ const firebaseConfig = loadFirebaseConfig();
 
 export default defineConfig({
   plugins: [react()],
-  base: '/ex-it/',
+  // Use VITE_BASE_PATH for GitHub Pages (/ex-it/), default to / for Firebase Hosting
+  base: process.env.VITE_BASE_PATH || '/',
   define: {
     __FIREBASE_CONFIG__: JSON.stringify(firebaseConfig)
   }

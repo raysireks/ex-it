@@ -14,7 +14,7 @@ export const chatService = {
         console.log("User sent:", message);
 
         try {
-            // Using Gemini Developer API via Firebase SDK
+            // Using Vertex AI via Firebase SDK
             const model = getGenerativeModel(ai, { model: "gemini-2.5-flash" });
 
             const prompt = `
