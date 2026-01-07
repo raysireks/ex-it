@@ -50,6 +50,7 @@ jobs:
       - name: Build
         env:
           FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
+          VITE_RECAPTCHA_SITE_KEY: ${{ secrets.RECAPTCHA_SITE_KEY }}
           VITE_BASE_PATH: '/ex-it/'
         run: npm run build
 
