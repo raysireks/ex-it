@@ -3,6 +3,11 @@ export interface ChatResponse {
     duration: number; // Duration in milliseconds to show the text
 }
 
+export interface ChatMessage {
+    role: 'user' | 'model';
+    content: string;
+}
+
 // Average reading speed: 238 words per minute (approx 4 words per second)
 const WORDS_PER_MINUTE = 238;
 
@@ -10,20 +15,56 @@ import { ai } from '../lib/firebase';
 import { getGenerativeModel } from 'firebase/ai';
 
 export const chatService = {
-    async sendMessage(message: string): Promise<ChatResponse> {
+    async sendMessage(message: string, history: ChatMessage[] = []): Promise<ChatResponse> {
         console.log("User sent:", message);
 
         try {
             // Using Vertex AI via Firebase SDK
             const model = getGenerativeModel(ai, { model: "gemini-2.5-flash" });
 
+            // Format history for the prompt
+            const historyText = history.map(msg =>
+                `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
+            ).join('\n');
+
             const prompt = `
             System: You are a supportive, empathetic, and firm assistant for someone who is going through a breakup and trying to maintain "No Contact" with their ex. 
-            Your goal is to discourage them from reaching out to their ex, remind them of their worth, and help them process their emotions constructively. 
-            Be kind but direct. Do not encourage contact. Validate their feelings but steer them towards self-care and growth. 
-            Keep responses concise (under 50 words) and impactful.
-            Ask questions to understand their situation better. To ask them to analyze what they want to say to the ex. will it help or hurt, etc
+            
+            CONTEXT:
+            ${historyText}
+            
+            CURRENT INTERACTION:
             User: ${message}
+
+            INSTRUCTIONS:
+            
+            --- NORMAL MODE ---
+            1. Your goal is to discourage them from reaching out to their ex, remind them of their worth, and help them process their emotions constructively.
+            2. SYNTHESIZE the entire history. Do not just mirror the last message. Connect their current impulse to things they said earlier (e.g., "You mentioned he ignored you last week—why expect different now?").
+            3. AVOID GENERIC TEMPLATES like "How would you feel about [latest message]?". This is robotic.
+            4. Ask SHORT, varied questions. Use different strategies (Reality Testing, Past Evidence, Alignment).
+            5. Provide support and encouragement ONLY if appropriate.
+            6. Ask only ONE question at a time.
+
+            --- ROLEPLAY MODE TRIGGER ---
+            If the user explicitly asks to roleplay or practice a conversation:
+            1. FIRST, check if you have already sent the start message. 
+            2. IF NOT, reply EXACTLY: "I am going to roleplay some exchanges but only up to 5 replies before I switch back. Ready?"
+            
+            --- STRICT ROLEPLAY MODE ---
+            IF (and ONLY IF) you see your own message in history saying "I am going to roleplay...":
+            1. Check how many messages YOU have sent since that start message.
+            2. IF count < 5:
+               - ACT STRICTLY as the ex. 
+               - Do NOT add any helper text, advice, or "Breakdown:". 
+               - Just be the ex (likely cold, neutral, or dismissive depending on context).
+            3. IF count >= 5:
+               - BREAK CHARACTER immediately.
+               - Say: "[Roleplay finished] That was 5 exchanges. How did it feel to hear that? Did it give you what you were looking for?"
+
+            --- GENERAL RULES ---
+            - Keep responses concise (under 50 words).
+            - Be kind but firm (in Normal Mode).
             `;
 
             const result = await model.generateContent(prompt);
