@@ -25,7 +25,7 @@ if (import.meta.env.DEV) {
 // Initialize App Check with reCAPTCHA v3 for security
 // This ensures only your app can access Firebase resources
 export const appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider('REDACTED_SITE_KEY'),
+    provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
     isTokenAutoRefreshEnabled: true
 });
 console.log('App Check: Initialized with reCAPTCHA v3');
