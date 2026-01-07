@@ -79,7 +79,7 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
         <div className="chatbot-page">
             <div className="counter-container">
                 {/* Glowing Circle */}
-                <div className="counter-circle glowing">
+                <div className={`counter-circle glowing ${botMessage || isProcessing ? 'faded' : ''}`}>
                     <div className="days">{days}</div>
                     <div className="label">Days of No Contact</div>
                 </div>
@@ -108,6 +108,16 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
                 <div className={`zoom-text-overlay ${isZoomingOut ? 'zooming-out' : 'zooming-in'}`}>
                     <div className="zoom-text-content">
                         {botMessage}
+                    </div>
+                </div>
+            )}
+
+            {!botMessage && isProcessing && (
+                <div className="zoom-text-overlay zooming-in">
+                    <div className="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
                     </div>
                 </div>
             )}
