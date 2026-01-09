@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNoContactCounter } from '../hooks/useNoContactCounter';
 import { chatService, ChatMessage } from '../services/chatService';
+import { useAuth } from '../hooks/useAuth';
+import { blurbService } from '../services/blurbService';
 
 interface ChatbotPageProps {
     onBack: () => void;
@@ -8,17 +10,31 @@ interface ChatbotPageProps {
 
 const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
     const { days } = useNoContactCounter();
+    const { isAuthenticated } = useAuth();
     const [inputText, setInputText] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [botMessage, setBotMessage] = useState<string | null>(null);
     const [isZoomingOut, setIsZoomingOut] = useState(false);
     const [history, setHistory] = useState<ChatMessage[]>([]);
+    const [encouragementQuote, setEncouragementQuote] = useState<string>('');
 
     const zoomTimeoutRef = useRef<number | null>(null);
 
+    // Load a random encouragement quote for non-authenticated users
+    useEffect(() => {
+        if (!isAuthenticated) {
+            blurbService.getTopBlurbs(10).then(blurbs => {
+                if (blurbs.length > 0) {
+                    const randomBlurb = blurbs[Math.floor(Math.random() * blurbs.length)];
+                    setEncouragementQuote(randomBlurb.text);
+                }
+            });
+        }
+    }, [isAuthenticated]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!inputText.trim() || isProcessing) return;
+        if (!inputText.trim() || isProcessing || !isAuthenticated) return;
 
         // Clear previous message states immediately if user interrupts
         if (zoomTimeoutRef.current) {
@@ -90,11 +106,12 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
                         type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="Tell me what you want to say to them..."
-                        disabled={isProcessing}
-                        autoFocus
+                        placeholder={isAuthenticated ? "Tell me what you want to say to them..." : "Login to use chat..."}
+                        disabled={isProcessing || !isAuthenticated}
+                        autoFocus={isAuthenticated}
+                        className={!isAuthenticated ? 'disabled' : ''}
                     />
-                    <button type="submit" disabled={!inputText.trim() || isProcessing}>
+                    <button type="submit" disabled={!inputText.trim() || isProcessing || !isAuthenticated}>
                         {isProcessing ? '...' : 'Send'}
                     </button>
                 </form>
@@ -103,6 +120,18 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
                     Exit Chat
                 </button>
             </div>
+
+            {/* Show encouragement quote and login prompt for non-authenticated users */}
+            {!isAuthenticated && encouragementQuote && (
+                <div className="unauthenticated-message">
+                    <div className="encouragement-quote">
+                        "{encouragementQuote}"
+                    </div>
+                    <div className="login-prompt">
+                        If you want interaction with the chat, please login
+                    </div>
+                </div>
+            )}
 
             {botMessage && (
                 <div className={`zoom-text-overlay ${isZoomingOut ? 'zooming-out' : 'zooming-in'}`}>
