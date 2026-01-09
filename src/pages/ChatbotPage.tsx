@@ -30,7 +30,14 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
                 .then(blurbs => {
                     if (blurbs.length > 0) {
                         const randomBlurb = blurbs[Math.floor(Math.random() * blurbs.length)];
-                        setEncouragementQuote(randomBlurb.text);
+                        // Validate that the text exists and is not empty
+                        if (randomBlurb.text && randomBlurb.text.trim()) {
+                            setEncouragementQuote(randomBlurb.text);
+                        } else {
+                            setEncouragementQuote("Stay strong. You're on the right path.");
+                        }
+                    } else {
+                        setEncouragementQuote("Stay strong. You're on the right path.");
                     }
                 })
                 .catch(error => {
