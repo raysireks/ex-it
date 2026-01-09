@@ -16,7 +16,7 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
     const [botMessage, setBotMessage] = useState<string | null>(null);
     const [isZoomingOut, setIsZoomingOut] = useState(false);
     const [history, setHistory] = useState<ChatMessage[]>([]);
-    const [encouragementQuote, setEncouragementQuote] = useState<string>('');
+    const [encouragementQuote, setEncouragementQuote] = useState<string>("You're doing great. Stay strong on your journey.");
 
     const zoomTimeoutRef = useRef<number | null>(null);
 
@@ -38,6 +38,9 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
                     // Set a fallback quote if loading fails
                     setEncouragementQuote("Stay strong. You're on the right path.");
                 });
+        } else {
+            // Clear the quote when user becomes authenticated
+            setEncouragementQuote('');
         }
     }, [isAuthenticated]);
 
