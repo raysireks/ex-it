@@ -1280,6 +1280,10 @@ body {
   z-index: 1000;
   animation: fadeIn 0.8s ease-out forwards;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .encouragement-quote {
@@ -1290,6 +1294,8 @@ body {
   margin-bottom: 2rem;
   font-style: italic;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  text-align: center;
 }
 
 .login-prompt {
@@ -1297,4 +1303,6 @@ body {
   color: #ff4b4b;
   font-weight: 600;
   text-shadow: 0 2px 8px rgba(255, 75, 75, 0.5);
+  width: 100%;
+  text-align: center;
 }
