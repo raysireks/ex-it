@@ -1279,6 +1279,7 @@ body {
   padding: 2rem;
   z-index: 1000;
   animation: fadeIn 0.8s ease-out forwards;
+  pointer-events: none;
 }
 
 .encouragement-quote {
