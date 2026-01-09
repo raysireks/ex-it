@@ -3,13 +3,9 @@ name: CI - Build and Test
 on:
   # Run on push to any branch
   push:
-    branches:
-      - '**'
 
   # Also run on pull requests
   pull_request:
-    branches:
-      - '**'
 
   # Allow manual trigger
   workflow_dispatch:
