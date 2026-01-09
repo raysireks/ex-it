@@ -36,7 +36,9 @@ jobs:
         run: npm run build
 
       - name: Install function dependencies
-        run: cd functions && npm ci
+        working-directory: functions
+        run: npm ci
 
       - name: Build functions
-        run: cd functions && npm run build
+        working-directory: functions
+        run: npm run build
