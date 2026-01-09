@@ -20,15 +20,24 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
 
     const zoomTimeoutRef = useRef<number | null>(null);
 
+    // Number of blurbs to fetch for random selection
+    const BLURBS_TO_FETCH = 10;
+
     // Load a random encouragement quote for non-authenticated users
     useEffect(() => {
         if (!isAuthenticated) {
-            blurbService.getTopBlurbs(10).then(blurbs => {
-                if (blurbs.length > 0) {
-                    const randomBlurb = blurbs[Math.floor(Math.random() * blurbs.length)];
-                    setEncouragementQuote(randomBlurb.text);
-                }
-            });
+            blurbService.getTopBlurbs(BLURBS_TO_FETCH)
+                .then(blurbs => {
+                    if (blurbs.length > 0) {
+                        const randomBlurb = blurbs[Math.floor(Math.random() * blurbs.length)];
+                        setEncouragementQuote(randomBlurb.text);
+                    }
+                })
+                .catch(error => {
+                    console.error("Failed to load encouragement quotes:", error);
+                    // Set a fallback quote if loading fails
+                    setEncouragementQuote("Stay strong. You're on the right path.");
+                });
         }
     }, [isAuthenticated]);
 
