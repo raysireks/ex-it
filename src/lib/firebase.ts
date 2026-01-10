@@ -9,12 +9,11 @@ import { getAI } from "firebase/ai";
 // When using a custom domain (ex-it-now.com), Firebase Auth requires the authDomain
 // to match the current domain. In production, we use the current hostname.
 // In development, we use the configured authDomain from the config.
-const firebaseConfig = __FIREBASE_CONFIG__;
+const firebaseConfig = { ...__FIREBASE_CONFIG__ };
 if (!import.meta.env.DEV && typeof window !== 'undefined') {
     // In production, use the current hostname as authDomain
     // This allows authentication to work on both Firebase domains and custom domains
     firebaseConfig.authDomain = window.location.hostname;
-    console.log('Firebase: Using current hostname as authDomain:', firebaseConfig.authDomain);
 }
 
 export const app = initializeApp(firebaseConfig);
