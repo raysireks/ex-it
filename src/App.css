@@ -1176,8 +1176,8 @@ body {
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  padding-bottom: 8rem;
-  /* Space for input box */
+  padding-bottom: 12rem;
+  /* Space for input box and exit button */
   z-index: 2000;
   pointer-events: none;
   /* Let clicks pass through if needed, though usually text blocks */
