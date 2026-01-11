@@ -1140,17 +1140,29 @@ body {
 }
 
 .back-button {
-  margin-top: 2rem;
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 0.9rem;
+  position: fixed;
+  bottom: 8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 75, 75, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 30px;
   cursor: pointer;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
+  z-index: 2100;
+  box-shadow: 0 4px 15px rgba(255, 75, 75, 0.4);
+  backdrop-filter: blur(10px);
 }
 
 .back-button:hover {
-  color: white;
+  background: rgba(255, 75, 75, 1);
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 75, 75, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Zoom Text Overlay */
@@ -1164,8 +1176,8 @@ body {
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  padding-bottom: 8rem;
-  /* Space for input box */
+  padding-bottom: 12rem;
+  /* Space for input box and exit button */
   z-index: 2000;
   pointer-events: none;
   /* Let clicks pass through if needed, though usually text blocks */

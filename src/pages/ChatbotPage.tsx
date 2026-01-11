@@ -134,11 +134,11 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
                         {isProcessing ? '...' : 'Send'}
                     </button>
                 </form>
-
-                <button className="back-button" onClick={onBack}>
-                    Exit Chat
-                </button>
             </div>
+
+            <button className="back-button" onClick={onBack}>
+                Exit Chat
+            </button>
 
             {/* Show encouragement quote and login prompt for non-authenticated users */}
             {!isAuthenticated && encouragementQuote && (
