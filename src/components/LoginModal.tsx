@@ -70,7 +70,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
     } catch (err: any) {
       const handled = await handleConflict(err);
       if (!handled) {
-        setError('Failed to sign in via Google.');
+        setError(`Failed to sign in via Google: ${err.message || 'Unknown error'}`);
         console.error(err);
       }
     }
