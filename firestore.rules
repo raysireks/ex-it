@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Blurbs are readable by everyone, but only creatable by authenticated users
+    match /blurbs/{blurbId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null; // Simplification for voting
+    }
+    
+    // User data is only accessible by the owner
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Chat messages are only accessible by the owner
+    match /chats/{userId}/messages/{messageId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Resources are read-only for everyone
+    match /resources/{resourceId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

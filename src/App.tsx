@@ -14,6 +14,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState('landing');
   const [showLogin, setShowLogin] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [chatbotMode, setChatbotMode] = useState<'normal' | 'already_contacted'>('normal');
   const { user, logout } = useAuth();
 
   // Prevent body scrolling when mobile menu is open
@@ -37,13 +38,17 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'landing':
-        return <LandingPage onNavigate={setCurrentPage} />;
+        return <LandingPage onNavigate={(page, mode) => {
+          if (mode === 'already_contacted') setChatbotMode('already_contacted');
+          else setChatbotMode('normal');
+          setCurrentPage(page);
+        }} />;
       case 'support':
         return <SupportPage onNavigate={setCurrentPage} />;
       case 'resources':
         return <ResourcesPage />;
       case 'chatbot':
-        return <ChatbotPage onBack={() => setCurrentPage('landing')} />;
+        return <ChatbotPage mode={chatbotMode} onBack={() => setCurrentPage('landing')} />;
       default:
         return <LandingPage onNavigate={setCurrentPage} />;
     }

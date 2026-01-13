@@ -6,11 +6,11 @@ import { blurbService } from '../services/blurbService';
 import { Blurb } from '../types';
 
 interface LandingPageProps {
-  onNavigate?: (page: string) => void;
+  onNavigate?: (page: string, mode?: string) => void;
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
-  const { days } = useNoContactCounter();
+  const { days, reset } = useNoContactCounter();
   const [showBlurbs, setShowBlurbs] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [blurbOfTheDay, setBlurbOfTheDay] = useState<Blurb | null>(null);
@@ -44,7 +44,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
     // Wait for animation to finish before navigating
     setTimeout(() => {
       if (onNavigate) {
-        onNavigate('chatbot');
+        onNavigate('chatbot', 'normal');
+      }
+    }, 1500);
+  };
+
+  const handleAlreadyContacted = () => {
+    reset();
+    setIsTransitioning(true);
+    setTimeout(() => {
+      if (onNavigate) {
+        onNavigate('chatbot', 'already_contacted');
       }
     }, 1500);
   };
@@ -63,9 +73,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             <div className="blurb-attribution">— {blurbOfTheDay.username}</div>
           </div>
         )}
-        <button className="btn-primary" onClick={handleMessageClick}>
-          I Want to Message My Ex
-        </button>
+        <div className="landing-actions">
+          <button className="btn-primary" onClick={handleMessageClick}>
+            I Want to Message My Ex
+          </button>
+          <button className="btn-secondary" onClick={handleAlreadyContacted}>
+            I Contacted My Ex
+          </button>
+        </div>
       </div>
 
       {showBlurbs && <BlurbPopover onClose={() => setShowBlurbs(false)} />}
