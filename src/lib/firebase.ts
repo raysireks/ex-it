@@ -3,6 +3,7 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAI } from "firebase/ai";
 
 // Fix for custom domain authentication
@@ -42,6 +43,7 @@ export const appCheck = initializeAppCheck(app, {
 console.log('App Check: Initialized with reCAPTCHA v3');
 
 export const auth = getAuth(app);
+export const db = getFirestore(app);
 export const analytics = getAnalytics(app);
 export const functions = getFunctions(app);
 
@@ -51,6 +53,7 @@ export const ai = getAI(app);
 // Note: This will NEVER run in production builds (import.meta.env.DEV is false in production)
 if (import.meta.env.DEV && import.meta.env.VITE_USE_AUTH_EMULATOR === 'true') {
     connectAuthEmulator(auth, "http://localhost:9099");
+    connectFirestoreEmulator(db, 'localhost', 8080);
     connectFunctionsEmulator(functions, "localhost", 5001);
     // Disable phone auth verification for testing
     auth.settings.appVerificationDisabledForTesting = true;

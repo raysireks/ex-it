@@ -6,9 +6,10 @@ import { blurbService } from '../services/blurbService';
 
 interface ChatbotPageProps {
     onBack: () => void;
+    mode?: 'normal' | 'already_contacted';
 }
 
-const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
+const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack, mode = 'normal' }) => {
     const { days } = useNoContactCounter();
     const { isAuthenticated } = useAuth();
     const [inputText, setInputText] = useState('');
@@ -22,6 +23,13 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
 
     // Number of blurbs to fetch for random selection
     const BLURBS_TO_FETCH = 10;
+
+    // Initial greeting based on mode
+    useEffect(() => {
+        if (mode === 'already_contacted') {
+            setBotMessage("I'm here for you. It's okay that you reached out—healing isn't a straight line. Tell me what happened, or how you're feeling now.");
+        }
+    }, [mode]);
 
     // Load a random encouragement quote for non-authenticated users
     useEffect(() => {
@@ -72,13 +80,16 @@ const ChatbotPage: React.FC<ChatbotPageProps> = ({ onBack }) => {
         try {
             // Get last 20 messages to ensure roleplay context limits (5 turns = 10 messages) are visible
             const contextHistory = history.slice(-20);
-            const response = await chatService.sendMessage(messageToSend, contextHistory);
+            const response = await chatService.sendMessage(messageToSend, contextHistory, mode === 'already_contacted' ? 'contacted' : 'normal');
+
+            const userMsg: ChatMessage = { role: 'user', content: messageToSend };
+            const modelMsg: ChatMessage = { role: 'model', content: response.text };
 
             // Update history with new exchange
             setHistory(prev => [
                 ...prev,
-                { role: 'user', content: messageToSend },
-                { role: 'model', content: response.text }
+                userMsg,
+                modelMsg
             ]);
 
             setBotMessage(response.text);

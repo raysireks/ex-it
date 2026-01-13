@@ -1,47 +1,66 @@
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+  addDoc,
+  doc,
+  updateDoc,
+  increment,
+  serverTimestamp,
+  Timestamp
+} from 'firebase/firestore';
+import { db } from '../lib/firebase';
 import { Blurb } from '../types';
 
-// Stub blurbs service
 class BlurbService {
-  private blurbs: Blurb[] = [
-    { id: '1', text: 'Every day without contact is a day of healing.', votes: 42, userId: '2', username: 'Hope123', createdAt: new Date() },
-    { id: '2', text: 'I deserve someone who chooses me every day.', votes: 38, userId: '3', username: 'Strong_Mind', createdAt: new Date() },
-    { id: '3', text: 'The pain is temporary, but growth is permanent.', votes: 35, userId: '4', username: 'Moving_On', createdAt: new Date() },
-    { id: '4', text: 'No contact = No new pain.', votes: 31, userId: '5', username: 'Warrior22', createdAt: new Date() },
-    { id: '5', text: 'They lost someone who loved them. I lost someone who didn\'t love me.', votes: 28, userId: '6', username: 'Truth_Teller', createdAt: new Date() },
-    { id: '6', text: 'Breaking the cycle feels impossible until it\'s done.', votes: 25, userId: '7', username: 'Free_Bird', createdAt: new Date() },
-    { id: '7', text: 'My happiness doesn\'t depend on their validation.', votes: 22, userId: '8', username: 'Self_Love', createdAt: new Date() },
-    { id: '8', text: 'The urge to reach out will pass. Stay strong.', votes: 20, userId: '9', username: 'Day_by_Day', createdAt: new Date() },
-    { id: '9', text: 'I\'m choosing peace over temporary comfort.', votes: 18, userId: '10', username: 'Peaceful_Path', createdAt: new Date() },
-    { id: '10', text: 'Looking back keeps me stuck. Looking forward sets me free.', votes: 15, userId: '11', username: 'Forward_Focus', createdAt: new Date() },
-  ];
+  private blurbsCollection = collection(db, 'blurbs');
 
-  async getTopBlurbs(limit: number = 10): Promise<Blurb[]> {
-    return Promise.resolve(
-      [...this.blurbs]
-        .sort((a, b) => b.votes - a.votes)
-        .slice(0, limit)
+  async getTopBlurbs(limitCount: number = 10): Promise<Blurb[]> {
+    const q = query(
+      this.blurbsCollection,
+      orderBy('votes', 'desc'),
+      limit(limitCount)
     );
+
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        text: data.text,
+        votes: data.votes,
+        userId: data.userId,
+        username: data.username,
+        createdAt: (data.createdAt as Timestamp)?.toDate() || new Date(),
+      } as Blurb;
+    });
   }
 
-  async voteBlurb(blurbId: string): Promise<Blurb> {
-    const blurb = this.blurbs.find(b => b.id === blurbId);
-    if (blurb) {
-      blurb.votes++;
-    }
-    return Promise.resolve(blurb!);
+  async voteBlurb(blurbId: string): Promise<void> {
+    const blurbRef = doc(db, 'blurbs', blurbId);
+    await updateDoc(blurbRef, {
+      votes: increment(1)
+    });
   }
 
   async submitBlurb(text: string, userId: string, username: string): Promise<Blurb> {
-    const newBlurb: Blurb = {
-      id: Date.now().toString(),
+    const newBlurbData = {
       text,
       votes: 0,
       userId,
       username,
-      createdAt: new Date(),
+      createdAt: serverTimestamp(),
     };
-    this.blurbs.push(newBlurb);
-    return Promise.resolve(newBlurb);
+
+    const docRef = await addDoc(this.blurbsCollection, newBlurbData);
+
+    return {
+      id: docRef.id,
+      ...newBlurbData,
+      createdAt: new Date(), // Local approximation until refresh
+    } as Blurb;
   }
 }
 

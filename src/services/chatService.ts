@@ -15,8 +15,8 @@ import { ai } from '../lib/firebase';
 import { getGenerativeModel } from 'firebase/ai';
 
 export const chatService = {
-    async sendMessage(message: string, history: ChatMessage[] = []): Promise<ChatResponse> {
-        console.log("User sent:", message);
+    async sendMessage(message: string, history: ChatMessage[] = [], systemMode: 'normal' | 'contacted' = 'normal'): Promise<ChatResponse> {
+        console.log("User sent:", message, "Mode:", systemMode);
 
         try {
             // Using Vertex AI via Firebase SDK
@@ -26,6 +26,26 @@ export const chatService = {
             const historyText = history.map(msg =>
                 `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
             ).join('\n');
+
+            const normalInstructions = `
+            --- NORMAL MODE ---
+            1. Your goal is to discourage them from reaching out to their ex, remind them of their worth, and help them process their emotions constructively.
+            2. SYNTHESIZE the entire history. Do not just mirror the last message. Connect their current impulse to things they said earlier (e.g., "You mentioned he ignored you last week—why expect different now?").
+            3. AVOID GENERIC TEMPLATES like "How would you feel about [latest message]?". This is robotic.
+            4. Ask SHORT, varied questions. Use different strategies (Reality Testing, Past Evidence, Alignment).
+            5. Provide support and encouragement ONLY if appropriate.
+            6. Ask only ONE question at a time.
+            `;
+
+            const contactedInstructions = `
+            --- ALREADY CONTACTED MODE ---
+            1. The user has already contacted their ex. Do NOT shame them.
+            2. Your goal is to help them process how it felt, what happened, and why it's important to return to No Contact.
+            3. Be supportive and empathetic. Remind them that healing isn't linear.
+            4. Ask questions about the interaction: "How did you feel right after sending it?", "Did you get the response you were hoping for?", "What can we do next time to pause before hitting send?".
+            5. Help them identify the trigger that led to the contact.
+            6. Encourage them to restart their counter and commit to a new period of healing.
+            `;
 
             const prompt = `
             System: You are a supportive, empathetic, and firm assistant for someone who is going through a breakup and trying to maintain "No Contact" with their ex. 
@@ -37,14 +57,7 @@ export const chatService = {
             User: ${message}
 
             INSTRUCTIONS:
-            
-            --- NORMAL MODE ---
-            1. Your goal is to discourage them from reaching out to their ex, remind them of their worth, and help them process their emotions constructively.
-            2. SYNTHESIZE the entire history. Do not just mirror the last message. Connect their current impulse to things they said earlier (e.g., "You mentioned he ignored you last week—why expect different now?").
-            3. AVOID GENERIC TEMPLATES like "How would you feel about [latest message]?". This is robotic.
-            4. Ask SHORT, varied questions. Use different strategies (Reality Testing, Past Evidence, Alignment).
-            5. Provide support and encouragement ONLY if appropriate.
-            6. Ask only ONE question at a time.
+            ${systemMode === 'contacted' ? contactedInstructions : normalInstructions}
 
             --- ROLEPLAY MODE TRIGGER ---
             If the user explicitly asks to roleplay or practice a conversation:
@@ -82,7 +95,6 @@ export const chatService = {
             };
         } catch (error: any) {
             console.error("Error calling Gemini API:", error);
-            // DEBUG: Show actual error to help user debug
             const errorText = `Error: ${error.message || String(error)}. (Check console for details)`;
             return {
                 text: errorText,
